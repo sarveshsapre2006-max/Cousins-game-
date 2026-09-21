@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Antakshari Ants | Name Country City Game</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐜</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div id="toast" class="toast hidden"></div>
+<div id="confetti-layer" class="confetti-layer"></div>
+
+<!-- ============ HOME ============ -->
+<section id="screen-home" class="screen active">
+  <div class="ant-trail" aria-hidden="true">🐜🐜🐜🐜🐜</div>
+  <div class="card home-card">
+    <h1 class="logo">Antakshari <span class="logo-ants">Ants</span></h1>
+    <p class="tagline">Naam · Desh · Shehar · Cheez · Jaanwar · Sirnaam — the Indian word-race game</p>
+
+    <label class="field">
+      <span>Your name</span>
+      <input id="input-name" type="text" maxlength="20" placeholder="e.g. Rahul" autocomplete="off" />
+    </label>
+
+    <div class="home-actions">
+      <button id="btn-goto-create" class="btn btn-primary">🎉 Create a Room</button>
+      <button id="btn-goto-join" class="btn btn-secondary">🔑 Join a Room</button>
+    </div>
+
+    <p class="hint">2–5 players · 10 rounds · works great on phones</p>
+  </div>
+</section>
+
+<!-- ============ CREATE ROOM ============ -->
+<section id="screen-create" class="screen">
+  <div class="card">
+    <button class="btn-back" data-back="screen-home">← Back</button>
+    <h2>Create a Room</h2>
+
+    <label class="field">
+      <span>Round timer (seconds)</span>
+      <input id="input-round-time" type="number" min="15" max="180" value="60" />
+    </label>
+    <label class="field">
+      <span>Number of rounds</span>
+      <input id="input-total-rounds" type="number" min="3" max="15" value="10" />
+    </label>
+
+    <button id="btn-create-room" class="btn btn-primary btn-block">Create Room</button>
+  </div>
+</section>
+
+<!-- ============ JOIN ROOM ============ -->
+<section id="screen-join" class="screen">
+  <div class="card">
+    <button class="btn-back" data-back="screen-home">← Back</button>
+    <h2>Join a Room</h2>
+    <label class="field">
+      <span>Room code</span>
+      <input id="input-room-code" type="text" maxlength="5" placeholder="e.g. AB3K9" autocomplete="off" style="text-transform:uppercase;letter-spacing:.2em;font-weight:700;" />
+    </label>
+    <button id="btn-join-room" class="btn btn-primary btn-block">Join Room</button>
+  </div>
+</section>
+
+<!-- ============ LOBBY ============ -->
+<section id="screen-lobby" class="screen">
+  <div class="card lobby-card">
+    <div class="room-code-banner">
+      <span>Room Code</span>
+      <strong id="lobby-room-code">-----</strong>
+      <button id="btn-copy-code" class="btn-tiny" title="Copy code">📋 Copy</button>
+    </div>
+
+    <h2>Players in the room</h2>
+    <ul id="lobby-player-list" class="player-list"></ul>
+    <p class="hint" id="lobby-hint">Waiting for the host to start the game…</p>
+
+    <div id="lobby-config-summary" class="config-summary"></div>
+
+    <button id="btn-start-game" class="btn btn-primary btn-block hidden">🚀 Start Game</button>
+    <button id="btn-leave-lobby" class="btn btn-ghost btn-block">Leave room</button>
+  </div>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="screen-game" class="screen">
+  <div class="game-header">
+    <div class="round-badge">Round <span id="game-round-num">1</span>/<span id="game-round-total">10</span></div>
+    <div class="timer-wrap">
+      <svg viewBox="0 0 36 36" class="timer-ring">
+        <path class="timer-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+        <path id="timer-ring-fg" class="timer-ring-fg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+      </svg>
+      <span id="timer-seconds">60</span>
+    </div>
+  </div>
+
+  <div class="letter-reveal">
+    <span class="letter-reveal-label">Your letter is</span>
+    <div id="game-letter" class="big-letter">A</div>
+  </div>
+
+  <div id="submission-status" class="submission-status"></div>
+
+  <form id="answers-form" class="answers-form"></form>
+
+  <button id="btn-submit-answers" class="btn btn-primary btn-block">✅ Submit Answers</button>
+  <p id="submitted-note" class="hint hidden">Nice! Waiting for other players to finish… 🐜</p>
+</section>
+
+<!-- ============ ROUND RESULT ============ -->
+<section id="screen-round-result" class="screen">
+  <div class="card wide-card">
+    <h2>Round <span id="result-round-num">1</span> results — letter <span id="result-letter" class="pill"></span></h2>
+    <div id="result-table-wrap" class="result-table-wrap"></div>
+    <p class="hint" id="next-round-hint">Next round starting in <span id="next-round-countdown">8</span>s…</p>
+  </div>
+</section>
+
+<!-- ============ FINAL RESULTS ============ -->
+<section id="screen-final" class="screen">
+  <div class="card final-card">
+    <div class="trophy">🏆</div>
+    <h2 id="final-winner-text">And the winner is…</h2>
+    <ol id="final-leaderboard" class="final-leaderboard"></ol>
+    <button id="btn-play-again" class="btn btn-primary btn-block">Play Again</button>
+    <button id="btn-back-home" class="btn btn-ghost btn-block">Back to Home</button>
+  </div>
+</section>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/sounds.js"></script>
+<script src="/js/confetti.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>
